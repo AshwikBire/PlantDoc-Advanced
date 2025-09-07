@@ -3,158 +3,96 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PlantDoc - Advanced Plant Disease Detection</title>
+    <title>PlantDoc - प्लांटडॉक: पौधे की बीमारी पहचानकर्ता</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://cdn.jsdelivr.net/npm/@yaireo/tagify/dist/tagify.css" rel="stylesheet" type="text/css">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        :root {
-            --primary: #2e7d32;
-            --primary-light: #4caf50;
-            --primary-dark: #1b5e20;
-            --secondary: #ffa000;
-            --secondary-light: #ffc107;
-            --secondary-dark: #ff6f00;
-            --text-primary: #212121;
-            --text-secondary: #757575;
-            --background: #f5f9f6;
-            --card-bg: rgba(255, 255, 255, 0.9);
-            --error: #d32f2f;
-            --success: #388e3c;
-            --warning: #f57c00;
-            --info: #1976d2;
-            --transition: all 0.3s ease;
-        }
-
-        .dark-mode {
-            --text-primary: #f5f5f5;
-            --text-secondary: #bdbdbd;
-            --background: #1a1c1a;
-            --card-bg: rgba(40, 43, 40, 0.9);
-        }
-
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
-
+        
         body {
-            background: var(--background);
-            color: var(--text-primary);
+            background: linear-gradient(135deg, #6a994e 0%, #a7c957 100%);
+            color: #2d3a12;
             min-height: 100vh;
             padding: 20px;
-            transition: var(--transition);
         }
-
+        
         .container {
-            max-width: 1200px;
+            max-width: 1000px;
             margin: 0 auto;
-            background: var(--card-bg);
+            background: rgba(255, 255, 255, 0.95);
             border-radius: 20px;
             overflow: hidden;
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
-            backdrop-filter: blur(10px);
-            transition: var(--transition);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
         }
-
+        
         header {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            background: #2d3a12;
             color: #fff;
             padding: 25px;
             text-align: center;
             position: relative;
         }
-
-        .theme-toggle {
+        
+        .language-switcher {
             position: absolute;
             top: 20px;
             right: 20px;
             background: rgba(255, 255, 255, 0.2);
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
+            padding: 8px 15px;
+            border-radius: 20px;
             display: flex;
-            align-items: center;
-            justify-content: center;
+            gap: 10px;
+        }
+        
+        .language-btn {
+            background: none;
+            border: none;
+            color: white;
             cursor: pointer;
-            transition: var(--transition);
+            font-weight: 600;
+            padding: 5px 10px;
+            border-radius: 10px;
+            transition: all 0.3s ease;
         }
-
-        .theme-toggle:hover {
+        
+        .language-btn.active {
             background: rgba(255, 255, 255, 0.3);
-            transform: rotate(30deg);
         }
-
+        
         header h1 {
-            font-size: 2.8rem;
+            font-size: 2.5rem;
             margin-bottom: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 15px;
         }
-
+        
         header p {
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             opacity: 0.9;
-            max-width: 600px;
-            margin: 0 auto;
         }
-
+        
         .app-content {
             display: flex;
             flex-direction: column;
             padding: 30px;
         }
-
-        .tabs {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 25px;
-            border-bottom: 2px solid #e0e0e0;
-        }
-
-        .tab {
-            padding: 15px 25px;
-            border-radius: 10px 10px 0 0;
-            cursor: pointer;
-            font-weight: 600;
-            transition: var(--transition);
-            border-bottom: 3px solid transparent;
-        }
-
-        .tab.active {
-            background: rgba(46, 125, 50, 0.1);
-            color: var(--primary);
-            border-bottom: 3px solid var(--primary);
-        }
-
-        .tab-content {
-            display: none;
-        }
-
-        .tab-content.active {
-            display: block;
-            animation: fadeIn 0.5s ease;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
+        
         .camera-section {
             display: flex;
             flex-direction: column;
             gap: 20px;
             margin-bottom: 30px;
         }
-
+        
         .camera-preview {
             width: 100%;
-            height: 350px;
+            height: 300px;
             background: #f0f0f0;
             border-radius: 15px;
             display: flex;
@@ -162,26 +100,26 @@
             justify-content: center;
             overflow: hidden;
             position: relative;
-            box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.1);
         }
-
-        .camera-preview img, .camera-preview video {
+        
+        .camera-preview img {
             max-width: 100%;
             max-height: 100%;
             object-fit: contain;
         }
-
+        
         .camera-preview .placeholder {
             color: #888;
             font-size: 5rem;
         }
-
+        
         .camera-controls {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            display: flex;
             gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
         }
-
+        
         button {
             padding: 15px 25px;
             border: none;
@@ -189,88 +127,46 @@
             font-size: 1rem;
             font-weight: 600;
             cursor: pointer;
-            transition: var(--transition);
+            transition: all 0.3s ease;
             display: flex;
             align-items: center;
-            justify-content: center;
             gap: 10px;
         }
-
+        
         .btn-primary {
-            background: var(--primary);
+            background: #6a994e;
             color: white;
         }
-
+        
         .btn-primary:hover {
-            background: var(--primary-dark);
+            background: #5a8543;
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
         }
-
+        
         .btn-secondary {
-            background: var(--primary-light);
-            color: white;
+            background: #a7c957;
+            color: #2d3a12;
         }
-
+        
         .btn-secondary:hover {
-            background: var(--primary);
+            background: #92b44b;
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
         }
-
-        .btn-warning {
-            background: var(--secondary);
-            color: white;
-        }
-
-        .btn-warning:hover {
-            background: var(--secondary-dark);
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-        }
-
-        .camera-options {
-            display: flex;
-            gap: 10px;
-            justify-content: center;
-            margin-top: 15px;
-        }
-
-        .camera-option {
-            background: #e8f5e9;
-            border: none;
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: var(--transition);
-        }
-
-        .camera-option:hover {
-            background: #c8e6c9;
-            transform: scale(1.1);
-        }
-
+        
         .results-section {
-            background: #f1f8e9;
+            background: #f8f9e8;
             border-radius: 15px;
             padding: 25px;
             margin-top: 20px;
         }
-
+        
         .results-section h2 {
             margin-bottom: 20px;
             padding-bottom: 10px;
             border-bottom: 2px solid #dce1c5;
-            color: var(--text-primary);
-            display: flex;
-            align-items: center;
-            gap: 10px;
+            color: #2d3a12;
         }
-
+        
         .disease-card {
             display: flex;
             flex-direction: column;
@@ -279,43 +175,42 @@
             border-radius: 12px;
             padding: 20px;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-            margin-bottom: 20px;
         }
-
+        
         .disease-header {
             display: flex;
             align-items: center;
             gap: 15px;
         }
-
+        
         .disease-icon {
-            width: 60px;
-            height: 60px;
+            width: 50px;
+            height: 50px;
             border-radius: 50%;
-            background: #e8f5e9;
+            background: #eaf0cc;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.8rem;
-            color: var(--primary);
+            font-size: 1.5rem;
+            color: #6a994e;
         }
-
+        
         .disease-info h3 {
-            color: var(--text-primary);
+            color: #2d3a12;
             margin-bottom: 5px;
         }
-
+        
         .disease-info p {
-            color: var(--text-secondary);
+            color: #5a6b3d;
         }
-
+        
         .confidence {
             display: flex;
             align-items: center;
             gap: 10px;
             margin-top: 10px;
         }
-
+        
         .confidence-bar {
             height: 10px;
             flex-grow: 1;
@@ -323,128 +218,38 @@
             border-radius: 5px;
             overflow: hidden;
         }
-
+        
         .confidence-level {
             height: 100%;
-            background: var(--primary-light);
+            background: #a7c957;
             border-radius: 5px;
-            transition: width 1s ease;
         }
-
+        
         .treatment {
             background: #f1f5dc;
             padding: 15px;
             border-radius: 10px;
             margin-top: 10px;
         }
-
+        
         .treatment h4 {
             margin-bottom: 10px;
-            color: var(--text-primary);
-            display: flex;
-            align-items: center;
-            gap: 10px;
+            color: #2d3a12;
         }
-
+        
         .treatment ul {
             margin-left: 20px;
             color: #4d5c2c;
         }
-
-        .treatment li {
-            margin-bottom: 8px;
-            line-height: 1.5;
-        }
-
-        .probability-chart {
-            margin-top: 20px;
-            height: 300px;
-        }
-
-        .care-schedule {
-            margin-top: 30px;
-        }
-
-        .calendar {
-            display: grid;
-            grid-template-columns: repeat(7, 1fr);
-            gap: 5px;
-            margin-top: 15px;
-        }
-
-        .calendar-day {
-            padding: 10px;
-            border-radius: 8px;
-            background: #e8f5e9;
-            text-align: center;
-            cursor: pointer;
-            transition: var(--transition);
-        }
-
-        .calendar-day:hover {
-            background: #c8e6c9;
-        }
-
-        .calendar-day.active {
-            background: var(--primary);
-            color: white;
-        }
-
-        .history-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            gap: 20px;
-            margin-top: 20px;
-        }
-
-        .history-item {
-            background: white;
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-            transition: var(--transition);
-            cursor: pointer;
-        }
-
-        .history-item:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-        }
-
-        .history-image {
-            height: 150px;
-            overflow: hidden;
-        }
-
-        .history-image img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .history-content {
-            padding: 15px;
-        }
-
-        .history-content h4 {
-            margin-bottom: 5px;
-            color: var(--text-primary);
-        }
-
-        .history-content p {
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-        }
-
+        
         footer {
             text-align: center;
             padding: 20px;
-            background: var(--primary-dark);
+            background: #2d3a12;
             color: #a7c957;
             font-size: 0.9rem;
         }
-
-        /* Responsive Design */
+        
         @media (max-width: 768px) {
             header h1 {
                 font-size: 2rem;
@@ -455,389 +260,132 @@
             }
             
             .camera-controls {
-                grid-template-columns: 1fr;
+                flex-direction: column;
             }
             
-            .tabs {
-                overflow-x: auto;
-                padding-bottom: 5px;
+            button {
+                width: 100%;
+                justify-content: center;
             }
             
-            .tab {
-                white-space: nowrap;
-                padding: 10px 15px;
+            .language-switcher {
+                position: relative;
+                top: 0;
+                right: 0;
+                justify-content: center;
+                margin-bottom: 15px;
             }
-            
-            .history-grid {
-                grid-template-columns: 1fr;
-            }
         }
 
-        /* Animation for loading */
-        @keyframes pulse {
-            0% { opacity: 1; }
-            50% { opacity: 0.5; }
-            100% { opacity: 1; }
-        }
-
-        .loading {
-            animation: pulse 1.5s infinite;
-        }
-
-        /* Badge for disease status */
-        .status-badge {
-            display: inline-block;
-            padding: 5px 10px;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            margin-left: 10px;
-        }
-
-        .status-healthy {
-            background: #e8f5e9;
-            color: var(--success);
-        }
-
-        .status-warning {
-            background: #fff8e1;
-            color: var(--warning);
-        }
-
-        .status-critical {
-            background: #ffebee;
-            color: var(--error);
-        }
-
-        /* Advanced filters */
-        .filter-section {
-            display: flex;
-            gap: 15px;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
-        }
-
-        .filter-item {
-            background: white;
-            padding: 10px 15px;
-            border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            cursor: pointer;
-            transition: var(--transition);
-        }
-
-        .filter-item:hover {
-            background: #f5f5f5;
-        }
-
-        .filter-item.active {
-            background: var(--primary);
-            color: white;
+        .hindi {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
     </style>
 </head>
 <body>
     <div class="container">
         <header>
-            <div class="theme-toggle" id="themeToggle">
-                <i class="fas fa-moon"></i>
+            <div class="language-switcher">
+                <button class="language-btn active" id="englishBtn">English</button>
+                <button class="language-btn" id="hindiBtn">हिंदी</button>
             </div>
-            <h1><i class="fas fa-leaf"></i> PlantDoc Advanced</h1>
-            <p>AI-powered plant disease detection with advanced care recommendations</p>
+            <h1><i class="fas fa-leaf"></i> <span class="lang" data-en="PlantDoc" data-hi="प्लांटडॉक">PlantDoc</span></h1>
+            <p class="lang" data-en="Identify plant diseases from leaf photos" data-hi="पत्तियों की तस्वीरों से पौधों की बीमारियों की पहचान करें">Identify plant diseases from leaf photos</p>
         </header>
         
         <div class="app-content">
-            <div class="tabs">
-                <div class="tab active" data-tab="scan">Scan Plant</div>
-                <div class="tab" data-tab="history">History</div>
-                <div class="tab" data-tab="care">Plant Care</div>
-                <div class="tab" data-tab="settings">Settings</div>
-            </div>
-            
-            <div class="tab-content active" id="scan-tab">
-                <div class="camera-section">
-                    <h2>Scan Plant Leaf</h2>
-                    <div class="camera-preview">
-                        <div class="placeholder" id="previewPlaceholder">
-                            <i class="fas fa-camera"></i>
-                        </div>
-                        <img id="previewImage" style="display: none;" alt="Captured image">
-                        <video id="cameraFeed" style="display: none;" autoplay playsinline></video>
+            <div class="camera-section">
+                <h2 class="lang" data-en="Capture Leaf Photo" data-hi="पत्ती की फोटो कैप्चर करें">Capture Leaf Photo</h2>
+                <div class="camera-preview">
+                    <div class="placeholder" id="previewPlaceholder">
+                        <i class="fas fa-camera"></i>
                     </div>
-                    
-                    <div class="camera-controls">
-                        <button class="btn-primary" onclick="capturePhoto()">
-                            <i class="fas fa-camera"></i> Capture Photo
-                        </button>
-                        <button class="btn-secondary" onclick="uploadPhoto()">
-                            <i class="fas fa-upload"></i> Upload Photo
-                        </button>
-                        <button class="btn-warning" id="toggleCamera" style="display: none;">
-                            <i class="fas fa-exchange-alt"></i> Switch Camera
-                        </button>
-                        <input type="file" id="fileInput" accept="image/*" style="display: none;">
-                    </div>
-
-                    <div class="camera-options">
-                        <div class="camera-option" onclick="toggleFlash()">
-                            <i class="fas fa-bolt" id="flashIcon"></i>
-                        </div>
-                        <div class="camera-option" onclick="toggleGrid()">
-                            <i class="fas fa-th" id="gridIcon"></i>
-                        </div>
-                    </div>
+                    <img id="previewImage" style="display: none;" alt="Captured image">
                 </div>
                 
-                <div class="results-section" id="resultsSection" style="display: none;">
-                    <h2><i class="fas fa-diagnoses"></i> Analysis Results</h2>
-                    <div class="disease-card">
-                        <div class="disease-header">
-                            <div class="disease-icon">
-                                <i class="fas fa-shield-alt"></i>
-                            </div>
-                            <div class="disease-info">
-                                <h3 id="diseaseName">Healthy Plant <span class="status-badge status-healthy">Healthy</span></h3>
-                                <p id="diseaseLatin">No disease detected</p>
-                            </div>
-                        </div>
-                        
-                        <div class="confidence">
-                            <span>Confidence:</span>
-                            <div class="confidence-bar">
-                                <div class="confidence-level" id="confidenceBar" style="width: 92%;"></div>
-                            </div>
-                            <span id="confidenceValue">92%</span>
-                        </div>
-
-                        <div class="probability-chart">
-                            <canvas id="probabilityChart"></canvas>
-                        </div>
-                        
-                        <div class="treatment">
-                            <h4><i class="fas fa-first-aid"></i> Care Recommendations</h4>
-                            <ul id="treatmentList">
-                                <li>Continue current care regimen</li>
-                                <li>Monitor for any changes in leaf color or texture</li>
-                                <li>Ensure proper sunlight and watering</li>
-                            </ul>
-                        </div>
-
-                        <div class="care-schedule">
-                            <h4><i class="fas fa-calendar-alt"></i> Recommended Care Schedule</h4>
-                            <div class="calendar" id="careCalendar">
-                                <!-- Calendar will be populated by JavaScript -->
-                            </div>
-                        </div>
-                    </div>
-
-                    <button class="btn-primary" onclick="saveToHistory()">
-                        <i class="fas fa-save"></i> Save to History
+                <div class="camera-controls">
+                    <button class="btn-primary" onclick="capturePhoto()">
+                        <i class="fas fa-camera"></i> <span class="lang" data-en="Capture Photo" data-hi="फोटो कैप्चर करें">Capture Photo</span>
                     </button>
-                    <button class="btn-secondary" onclick="exportReport()">
-                        <i class="fas fa-download"></i> Export Report
+                    <button class="btn-secondary" onclick="uploadPhoto()">
+                        <i class="fas fa-upload"></i> <span class="lang" data-en="Upload Photo" data-hi="फोटो अपलोड करें">Upload Photo</span>
                     </button>
+                    <input type="file" id="fileInput" accept="image/*" style="display: none;">
                 </div>
             </div>
             
-            <div class="tab-content" id="history-tab">
-                <h2><i class="fas fa-history"></i> Scan History</h2>
-                
-                <div class="filter-section">
-                    <div class="filter-item active">All</div>
-                    <div class="filter-item">Healthy</div>
-                    <div class="filter-item">Diseased</div>
-                    <div class="filter-item">Critical</div>
-                </div>
-                
-                <div class="history-grid" id="historyGrid">
-                    <!-- History items will be populated by JavaScript -->
-                </div>
-            </div>
-            
-            <div class="tab-content" id="care-tab">
-                <h2><i class="fas fa-seedling"></i> Plant Care Guide</h2>
-                
+            <div class="results-section">
+                <h2 class="lang" data-en="Analysis Results" data-hi="विश्लेषण परिणाम">Analysis Results</h2>
                 <div class="disease-card">
-                    <h3>Common Plant Diseases</h3>
-                    <p>Learn how to identify and treat common plant diseases</p>
+                    <div class="disease-header">
+                        <div class="disease-icon">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <div class="disease-info">
+                            <h3 id="diseaseName" class="lang" data-en="Healthy Plant" data-hi="स्वस्थ पौधा">Healthy Plant</h3>
+                            <p id="diseaseLatin" class="lang" data-en="No disease detected" data-hi="कोई बीमारी का पता नहीं चला">No disease detected</p>
+                        </div>
+                    </div>
+                    
+                    <div class="confidence">
+                        <span class="lang" data-en="Confidence:" data-hi="विश्वास स्तर:">Confidence:</span>
+                        <div class="confidence-bar">
+                            <div class="confidence-level" id="confidenceBar" style="width: 92%;"></div>
+                        </div>
+                        <span id="confidenceValue">92%</span>
+                    </div>
                     
                     <div class="treatment">
-                        <h4>Tomato Early Blight</h4>
-                        <ul>
-                            <li>Remove affected leaves</li>
-                            <li>Apply copper-based fungicide</li>
-                            <li>Improve air circulation around plants</li>
-                            <li>Avoid overhead watering</li>
+                        <h4 class="lang" data-en="Care Recommendations" data-hi="देखभाल सुझाव">Care Recommendations</h4>
+                        <ul id="treatmentList">
+                            <li class="lang" data-en="Continue current care regimen" data-hi="वर्तमान देखभाल व्यवस्था जारी रखें">Continue current care regimen</li>
+                            <li class="lang" data-en="Monitor for any changes in leaf color or texture" data-hi="पत्ती के रंग या बनावट में किसी भी बदलाव पर नज़र रखें">Monitor for any changes in leaf color or texture</li>
+                            <li class="lang" data-en="Ensure proper sunlight and watering" data-hi="उचित सूर्यप्रकाश और पानी सुनिश्चित करें">Ensure proper sunlight and watering</li>
                         </ul>
-                    </div>
-                    
-                    <div class="treatment">
-                        <h4>Powdery Mildew</h4>
-                        <ul>
-                            <li>Apply sulfur or potassium bicarbonate</li>
-                            <li>Prune to improve air circulation</li>
-                            <li>Avoid excessive nitrogen fertilizers</li>
-                            <li>Water plants at the base</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="tab-content" id="settings-tab">
-                <h2><i class="fas fa-cog"></i> Settings</h2>
-                
-                <div class="disease-card">
-                    <h3>Application Settings</h3>
-                    
-                    <div class="treatment">
-                        <h4>Image Quality</h4>
-                        <p>Adjust the quality of captured images</p>
-                        <input type="range" min="1" max="100" value="85" class="slider" id="qualitySlider">
-                        <span id="qualityValue">85%</span>
-                    </div>
-                    
-                    <div class="treatment">
-                        <h4>Analysis Mode</h4>
-                        <p>Choose between quick or detailed analysis</p>
-                        <select id="analysisMode">
-                            <option value="fast">Fast Analysis</option>
-                            <option value="detailed" selected>Detailed Analysis</option>
-                        </select>
-                    </div>
-                    
-                    <div class="treatment">
-                        <h4>Data Saving</h4>
-                        <p>Automatically save scan results to history</p>
-                        <label class="switch">
-                            <input type="checkbox" id="autoSave" checked>
-                            <span class="slider round"></span>
-                        </label>
                     </div>
                 </div>
             </div>
         </div>
         
         <footer>
-            <p>PlantDoc uses AI to help identify plant diseases. Results are not 100% accurate and should be verified by a plant expert.</p>
-            <p>© 2023 PlantDoc | Making plant care accessible to everyone</p>
+            <p class="lang" data-en="PlantDoc uses AI to help identify plant diseases. Results are not 100% accurate and should be verified by a plant expert." data-hi="प्लांटडॉक पौधों की बीमारियों की पहचान करने में मदद के लिए AI का उपयोग करता है। परिणाम 100% सटीक नहीं हैं और इन्हें एक पौध विशेषज्ञ द्वारा सत्यापित किया जाना चाहिए।">PlantDoc uses AI to help identify plant diseases. Results are not 100% accurate and should be verified by a plant expert.</p>
+            <p class="lang" data-en="© 2023 PlantDoc | Making plant care accessible to everyone" data-hi="© 2023 प्लांटडॉक | सभी के लिए पौधों की देखभाल को सुलभ बनाना">© 2023 PlantDoc | Making plant care accessible to everyone</p>
         </footer>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/@yaireo/tagify"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@yaireo/tagify/dist/tagify.polyfills.min.js"></script>
     <script>
-        // DOM Elements
-        const themeToggle = document.getElementById('themeToggle');
-        const tabs = document.querySelectorAll('.tab');
-        const tabContents = document.querySelectorAll('.tab-content');
-        const previewPlaceholder = document.getElementById('previewPlaceholder');
-        const previewImage = document.getElementById('previewImage');
-        const cameraFeed = document.getElementById('cameraFeed');
-        const fileInput = document.getElementById('fileInput');
-        const resultsSection = document.getElementById('resultsSection');
-        const toggleCameraBtn = document.getElementById('toggleCamera');
-        const flashIcon = document.getElementById('flashIcon');
-        const gridIcon = document.getElementById('gridIcon');
-        const historyGrid = document.getElementById('historyGrid');
+        // Language switching functionality
+        const englishBtn = document.getElementById('englishBtn');
+        const hindiBtn = document.getElementById('hindiBtn');
+        const langElements = document.querySelectorAll('.lang');
         
-        // Theme Management
-        themeToggle.addEventListener('click', () => {
-            document.body.classList.toggle('dark-mode');
-            if (document.body.classList.contains('dark-mode')) {
-                themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
-            } else {
-                themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
-            }
+        englishBtn.addEventListener('click', () => {
+            setLanguage('en');
+            englishBtn.classList.add('active');
+            hindiBtn.classList.remove('active');
         });
         
-        // Tab Management
-        tabs.forEach(tab => {
-            tab.addEventListener('click', () => {
-                const tabId = tab.getAttribute('data-tab');
-                
-                // Deactivate all tabs
-                tabs.forEach(t => t.classList.remove('active'));
-                tabContents.forEach(tc => tc.classList.remove('active'));
-                
-                // Activate current tab
-                tab.classList.add('active');
-                document.getElementById(`${tabId}-tab`).classList.add('active');
-                
-                // If history tab is selected, load history
-                if (tabId === 'history') {
-                    loadHistory();
+        hindiBtn.addEventListener('click', () => {
+            setLanguage('hi');
+            hindiBtn.classList.add('active');
+            englishBtn.classList.remove('active');
+        });
+        
+        function setLanguage(lang) {
+            langElements.forEach(element => {
+                if (element.dataset[lang]) {
+                    element.textContent = element.dataset[lang];
                 }
             });
-        });
-        
-        // Initialize camera
-        let stream = null;
-        let facingMode = 'environment'; // Start with rear camera
-        let flashOn = false;
-        let gridOn = false;
-        
-        function initCamera() {
-            if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-                const constraints = {
-                    video: { 
-                        facingMode: facingMode,
-                        width: { ideal: 1280 },
-                        height: { ideal: 720 }
-                    },
-                    audio: false
-                };
-                
-                navigator.mediaDevices.getUserMedia(constraints)
-                    .then(function(mediaStream) {
-                        stream = mediaStream;
-                        cameraFeed.srcObject = mediaStream;
-                        cameraFeed.style.display = 'block';
-                        previewPlaceholder.style.display = 'none';
-                        toggleCameraBtn.style.display = 'flex';
-                    })
-                    .catch(function(error) {
-                        console.error("Camera error: ", error);
-                        previewPlaceholder.innerHTML = '<i class="fas fa-camera-slash"></i> Camera not available';
-                    });
-            } else {
-                previewPlaceholder.innerHTML = '<i class="fas fa-camera-slash"></i> Camera not supported';
-            }
-        }
-        
-        // Switch between front and rear camera
-        function switchCamera() {
-            if (stream) {
-                stream.getTracks().forEach(track => track.stop());
-            }
             
-            facingMode = facingMode === 'environment' ? 'user' : 'environment';
-            initCamera();
-        }
-        
-        // Capture photo from camera feed
-        function capturePhoto() {
-            if (!stream) {
-                initCamera();
-                return;
+            // Update disease name and treatment based on language if needed
+            if (window.currentDisease) {
+                updateDiseaseInfo(window.currentDisease, lang);
             }
-            
-            const canvas = document.createElement('canvas');
-            canvas.width = cameraFeed.videoWidth;
-            canvas.height = cameraFeed.videoHeight;
-            const ctx = canvas.getContext('2d');
-            ctx.drawImage(cameraFeed, 0, 0, canvas.width, canvas.height);
-            
-            const imageData = canvas.toDataURL('image/jpeg', document.getElementById('qualitySlider').value / 100);
-            displayPreviewImage(imageData);
-            analyzePlant();
         }
         
         // Handle file upload
-        function uploadPhoto() {
-            fileInput.click();
-        }
-        
-        fileInput.addEventListener('change', function(event) {
+        document.getElementById('fileInput').addEventListener('change', function(event) {
             const file = event.target.files[0];
             if (file) {
                 const reader = new FileReader();
@@ -851,349 +399,169 @@
         
         // Display the preview image
         function displayPreviewImage(imageData) {
-            if (stream) {
-                stream.getTracks().forEach(track => track.stop());
-                stream = null;
-            }
+            const preview = document.getElementById('previewImage');
+            const placeholder = document.getElementById('previewPlaceholder');
             
-            previewImage.src = imageData;
-            previewImage.style.display = 'block';
-            cameraFeed.style.display = 'none';
-            previewPlaceholder.style.display = 'none';
+            preview.src = imageData;
+            preview.style.display = 'block';
+            placeholder.style.display = 'none';
         }
         
-        // Toggle flash (simulated for demo)
-        function toggleFlash() {
-            flashOn = !flashOn;
-            flashIcon.style.color = flashOn ? '#ffc107' : '';
-            // In a real app, this would control the device flashlight
+        // Simulate photo capture
+        function capturePhoto() {
+            // In a real app, this would access the device camera
+            // For demo purposes, we'll use a sample image
+            const sampleImages = [
+                'https://images.unsplash.com/photo-1516633630673-67bbad747022?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80',
+                'https://images.unsplash.com/photo-1596436889106-be35e8433c10?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80',
+                'https://images.unsplash.com/photo-1597328295885-5c665edc5f7d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80'
+            ];
+            
+            const randomImage = sampleImages[Math.floor(Math.random() * sampleImages.length)];
+            displayPreviewImage(randomImage);
+            analyzePlant();
         }
         
-        // Toggle grid overlay
-        function toggleGrid() {
-            gridOn = !gridOn;
-            gridIcon.style.color = gridOn ? '#ffc107' : '';
-            previewPlaceholder.style.backgroundImage = gridOn ? 
-                'linear-gradient(rgba(0,0,0,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(0,0,0,0.1) 1px, transparent 1px)' : 
-                'none';
-            previewPlaceholder.style.backgroundSize = gridOn ? '20px 20px' : '';
+        // Trigger file upload
+        function uploadPhoto() {
+            document.getElementById('fileInput').click();
         }
         
         // Simulate plant disease analysis
         function analyzePlant() {
-            // Show loading state
-            resultsSection.style.display = 'block';
-            document.getElementById('diseaseName').innerHTML = 'Analyzing... <span class="status-badge status-healthy">Processing</span>';
-            document.getElementById('confidenceBar').style.width = '0%';
-            document.getElementById('confidenceValue').textContent = '0%';
-            
             // In a real app, this would send the image to a backend with a trained model
-            // For demo, we'll simulate analysis with a random result after a delay
-            setTimeout(() => {
-                const diseases = [
-                    {
-                        name: 'Healthy Plant',
-                        latin: 'No disease detected',
-                        confidence: Math.floor(Math.random() * 20 + 80),
-                        status: 'healthy',
-                        treatment: [
+            // For demo, we'll simulate analysis with a random result
+            
+            const diseases = [
+                {
+                    name: {
+                        en: 'Healthy Plant',
+                        hi: 'स्वस्थ पौधा'
+                    },
+                    latin: {
+                        en: 'No disease detected',
+                        hi: 'कोई बीमारी का पता नहीं चला'
+                    },
+                    confidence: Math.floor(Math.random() * 20 + 80),
+                    treatment: {
+                        en: [
                             'Continue current care regimen',
                             'Monitor for any changes in leaf color or texture',
-                            'Ensure proper sunlight and watering',
-                            'Consider adding organic fertilizer next month'
+                            'Ensure proper sunlight and watering'
+                        ],
+                        hi: [
+                            'वर्तमान देखभाल व्यवस्था जारी रखें',
+                            'पत्ती के रंग या बनावट में किसी भी बदलाव पर नज़र रखें',
+                            'उचित सूर्यप्रकाश और पानी सुनिश्चित करें'
                         ]
+                    }
+                },
+                {
+                    name: {
+                        en: 'Tomato Early Blight',
+                        hi: 'टमाटर अर्ली ब्लाइट'
                     },
-                    {
-                        name: 'Tomato Early Blight',
-                        latin: 'Alternaria solani',
-                        confidence: Math.floor(Math.random() * 30 + 65),
-                        status: 'warning',
-                        treatment: [
+                    latin: {
+                        en: 'Alternaria solani',
+                        hi: 'अल्टरनेरिया सोलानी'
+                    },
+                    confidence: Math.floor(Math.random() * 30 + 65),
+                    treatment: {
+                        en: [
                             'Remove affected leaves',
                             'Apply copper-based fungicide',
                             'Improve air circulation around plants',
-                            'Avoid overhead watering',
-                            'Apply neem oil as a preventive measure'
+                            'Avoid overhead watering'
+                        ],
+                        hi: [
+                            'प्रभावित पत्तियों को हटा दें',
+                            'तांबा-आधारित कवकनाशी लगाएं',
+                            'पौधों के आसपास हवा के संचार में सुधार करें',
+                            'ऊपर से पानी देने से बचें'
                         ]
+                    }
+                },
+                {
+                    name: {
+                        en: 'Powdery Mildew',
+                        hi: 'पाउडरी मिल्ड्यू'
                     },
-                    {
-                        name: 'Powdery Mildew',
-                        latin: 'Erysiphales',
-                        confidence: Math.floor(Math.random() * 30 + 65),
-                        status: 'warning',
-                        treatment: [
+                    latin: {
+                        en: 'Erysiphales',
+                        hi: 'एरिसिफेल्स'
+                    },
+                    confidence: Math.floor(Math.random() * 30 + 65),
+                    treatment: {
+                        en: [
                             'Apply sulfur or potassium bicarbonate',
                             'Prune to improve air circulation',
                             'Avoid excessive nitrogen fertilizers',
-                            'Water plants at the base',
-                            'Remove severely infected plants to prevent spread'
+                            'Water plants at the base'
+                        ],
+                        hi: [
+                            'सल्फर या पोटेशियम बाइकार्बोनेट लगाएं',
+                            'हवा के संचार में सुधार के लिए छंटाई करें',
+                            'अत्यधिक नाइट्रोजन उर्वरकों से बचें',
+                            'पौधों को基部 से पानी दें'
                         ]
+                    }
+                },
+                {
+                    name: {
+                        en: 'Leaf Spot',
+                        hi: 'लीफ स्पॉट'
                     },
-                    {
-                        name: 'Leaf Spot Disease',
-                        latin: 'Cercospora species',
-                        confidence: Math.floor(Math.random() * 30 + 60),
-                        status: 'critical',
-                        treatment: [
+                    latin: {
+                        en: 'Cercospora species',
+                        hi: 'सर्कोस्पोरा प्रजाति'
+                    },
+                    confidence: Math.floor(Math.random() * 30 + 60),
+                    treatment: {
+                        en: [
                             'Remove and destroy infected leaves',
                             'Apply appropriate fungicide',
                             'Water in the morning to allow leaves to dry',
-                            'Avoid crowding plants',
-                            'Sterilize tools after use on infected plants'
+                            'Avoid crowding plants'
+                        ],
+                        hi: [
+                            'संक्रमित पत्तियों को हटा दें और नष्ट कर दें',
+                            'उपयुक्त कवकनाशी लगाएं',
+                            'पत्तियों को सूखने देने के लिए सुबह पानी दें',
+                            'पौधों को भीड़भाड़ से बचें'
                         ]
                     }
-                ];
-                
-                // Select a random disease for demo purposes
-                const selectedDisease = diseases[Math.floor(Math.random() * diseases.length)];
-                
-                // Update UI with results
-                let statusClass = 'status-healthy';
-                if (selectedDisease.status === 'warning') statusClass = 'status-warning';
-                if (selectedDisease.status === 'critical') statusClass = 'status-critical';
-                
-                document.getElementById('diseaseName').innerHTML = `${selectedDisease.name} <span class="status-badge ${statusClass}">${selectedDisease.status.charAt(0).toUpperCase() + selectedDisease.status.slice(1)}</span>`;
-                document.getElementById('diseaseLatin').textContent = selectedDisease.latin;
-                document.getElementById('confidenceValue').textContent = selectedDisease.confidence + '%';
-                document.getElementById('confidenceBar').style.width = selectedDisease.confidence + '%';
-                
-                // Update treatment list
-                const treatmentList = document.getElementById('treatmentList');
-                treatmentList.innerHTML = '';
-                selectedDisease.treatment.forEach(treatment => {
-                    const li = document.createElement('li');
-                    li.textContent = treatment;
-                    treatmentList.appendChild(li);
-                });
-                
-                // Update probability chart
-                updateProbabilityChart(selectedDisease);
-                
-                // Update care calendar
-                updateCareCalendar(selectedDisease);
-                
-                // Scroll to results
-                resultsSection.scrollIntoView({ behavior: 'smooth' });
-            }, 2000);
+                }
+            ];
+            
+            // Select a random disease for demo purposes
+            const selectedDisease = diseases[Math.floor(Math.random() * diseases.length)];
+            window.currentDisease = selectedDisease;
+            
+            // Get current language
+            const currentLang = englishBtn.classList.contains('active') ? 'en' : 'hi';
+            
+            // Update UI with results
+            updateDiseaseInfo(selectedDisease, currentLang);
+            
+            // Show results section if hidden
+            document.querySelector('.results-section').style.display = 'block';
         }
         
-        // Update probability chart
-        function updateProbabilityChart(disease) {
-            const ctx = document.getElementById('probabilityChart').getContext('2d');
+        function updateDiseaseInfo(disease, lang) {
+            document.getElementById('diseaseName').textContent = disease.name[lang];
+            document.getElementById('diseaseLatin').textContent = disease.latin[lang];
+            document.getElementById('confidenceValue').textContent = disease.confidence + '%';
+            document.getElementById('confidenceBar').style.width = disease.confidence + '%';
             
-            // Sample data for different diseases
-            const diseases = ['Healthy', 'Early Blight', 'Powdery Mildew', 'Leaf Spot', 'Rust'];
-            const probabilities = [];
-            
-            // Generate probabilities with the selected disease having the highest value
-            for (let i = 0; i < diseases.length; i++) {
-                if (diseases[i].toLowerCase().includes(disease.name.toLowerCase().split(' ')[0])) {
-                    probabilities.push(disease.confidence);
-                } else {
-                    probabilities.push(Math.floor(Math.random() * 30));
-                }
-            }
-            
-            // Create or update chart
-            if (window.probabilityChart) {
-                window.probabilityChart.destroy();
-            }
-            
-            window.probabilityChart = new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: diseases,
-                    datasets: [{
-                        label: 'Probability %',
-                        data: probabilities,
-                        backgroundColor: [
-                            '#4caf50',
-                            '#ff9800',
-                            '#9c27b0',
-                            '#f44336',
-                            '#795548'
-                        ],
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            max: 100
-                        }
-                    }
-                }
+            // Update treatment list
+            const treatmentList = document.getElementById('treatmentList');
+            treatmentList.innerHTML = '';
+            disease.treatment[lang].forEach(treatment => {
+                const li = document.createElement('li');
+                li.textContent = treatment;
+                treatmentList.appendChild(li);
             });
         }
-        
-        // Update care calendar
-        function updateCareCalendar(disease) {
-            const calendar = document.getElementById('careCalendar');
-            calendar.innerHTML = '';
-            
-            const days = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
-            const today = new Date();
-            const currentDay = today.getDate();
-            
-            // Add day labels
-            days.forEach(day => {
-                const dayElement = document.createElement('div');
-                dayElement.className = 'calendar-day';
-                dayElement.style.background = 'transparent';
-                dayElement.style.cursor = 'default';
-                dayElement.textContent = day;
-                calendar.appendChild(dayElement);
-            });
-            
-            // Add empty days for the start of the month
-            const firstDay = new Date(today.getFullYear(), today.getMonth(), 1).getDay();
-            for (let i = 0; i < firstDay; i++) {
-                const emptyDay = document.createElement('div');
-                emptyDay.className = 'calendar-day';
-                emptyDay.style.visibility = 'hidden';
-                calendar.appendChild(emptyDay);
-            }
-            
-            // Add days of the month
-            const daysInMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0).getDate();
-            for (let i = 1; i <= daysInMonth; i++) {
-                const dayElement = document.createElement('div');
-                dayElement.className = 'calendar-day';
-                dayElement.textContent = i;
-                
-                // Mark today
-                if (i === currentDay) {
-                    dayElement.classList.add('active');
-                }
-                
-                // Mark care days based on disease severity
-                if (i > currentDay) {
-                    if (disease.status === 'healthy') {
-                        if (i % 7 === 0) { // Water every 7 days
-                            dayElement.style.background = '#c8e6c9';
-                        }
-                    } else if (disease.status === 'warning') {
-                        if (i % 3 === 0) { // Treat every 3 days
-                            dayElement.style.background = '#ffecb3';
-                        }
-                    } else if (disease.status === 'critical') {
-                        if (i % 2 === 0) { // Treat every 2 days
-                            dayElement.style.background = '#ffcdd2';
-                        }
-                    }
-                }
-                
-                calendar.appendChild(dayElement);
-            }
-        }
-        
-        // Save to history
-        function saveToHistory() {
-            const diseaseName = document.getElementById('diseaseName').textContent;
-            const confidence = document.getElementById('confidenceValue').textContent;
-            const imageData = previewImage.src;
-            const timestamp = new Date().toISOString();
-            
-            const historyItem = {
-                id: Date.now(),
-                name: diseaseName,
-                confidence: confidence,
-                image: imageData,
-                timestamp: timestamp,
-                status: document.querySelector('.status-badge').classList[1].replace('status-', '')
-            };
-            
-            let history = JSON.parse(localStorage.getItem('plantdoc-history') || '[]');
-            history.unshift(historyItem);
-            localStorage.setItem('plantdoc-history', JSON.stringify(history));
-            
-            alert('Scan saved to history!');
-        }
-        
-        // Load history
-        function loadHistory() {
-            const history = JSON.parse(localStorage.getItem('plantdoc-history') || '[]');
-            historyGrid.innerHTML = '';
-            
-            if (history.length === 0) {
-                historyGrid.innerHTML = '<p>No scan history yet.</p>';
-                return;
-            }
-            
-            history.forEach(item => {
-                const historyItem = document.createElement('div');
-                historyItem.className = 'history-item';
-                historyItem.innerHTML = `
-                    <div class="history-image">
-                        <img src="${item.image}" alt="${item.name}">
-                    </div>
-                    <div class="history-content">
-                        <h4>${item.name}</h4>
-                        <p>Confidence: ${item.confidence}</p>
-                        <p>${new Date(item.timestamp).toLocaleDateString()}</p>
-                    </div>
-                `;
-                
-                historyGrid.appendChild(historyItem);
-            });
-        }
-        
-        // Export report
-        function exportReport() {
-            // In a real app, this would generate a PDF or shareable report
-            alert('Report exported successfully!');
-        }
-        
-        // Initialize the app
-        function initApp() {
-            // Initialize camera on scan tab open
-            const scanTab = document.querySelector('[data-tab="scan"]');
-            scanTab.addEventListener('click', initCamera);
-            
-            // Initialize quality slider
-            const qualitySlider = document.getElementById('qualitySlider');
-            const qualityValue = document.getElementById('qualityValue');
-            qualitySlider.addEventListener('input', () => {
-                qualityValue.textContent = qualitySlider.value + '%';
-            });
-            
-            // Load any saved settings
-            const savedSettings = JSON.parse(localStorage.getItem('plantdoc-settings') || '{}');
-            if (savedSettings.quality) {
-                qualitySlider.value = savedSettings.quality;
-                qualityValue.textContent = savedSettings.quality + '%';
-            }
-            
-            if (savedSettings.analysisMode) {
-                document.getElementById('analysisMode').value = savedSettings.analysisMode;
-            }
-            
-            if (savedSettings.autoSave !== undefined) {
-                document.getElementById('autoSave').checked = savedSettings.autoSave;
-            }
-            
-            // Save settings on change
-            document.getElementById('qualitySlider').addEventListener('change', saveSettings);
-            document.getElementById('analysisMode').addEventListener('change', saveSettings);
-            document.getElementById('autoSave').addEventListener('change', saveSettings);
-        }
-        
-        // Save settings
-        function saveSettings() {
-            const settings = {
-                quality: document.getElementById('qualitySlider').value,
-                analysisMode: document.getElementById('analysisMode').value,
-                autoSave: document.getElementById('autoSave').checked
-            };
-            
-            localStorage.setItem('plantdoc-settings', JSON.stringify(settings));
-        }
-        
-        // Initialize the app when the DOM is loaded
-        document.addEventListener('DOMContentLoaded', initApp);
     </script>
 </body>
 </html>
